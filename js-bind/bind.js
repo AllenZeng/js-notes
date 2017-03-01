@@ -33,3 +33,26 @@ Function.prototype.bind = Function.prototype.bind || function (context) {
 		return me.apply(me, finalArgs);
 	}
 }
+
+// level 4
+// 构造函数的兼容
+Function.prototype.bind = Function.prototype.bind || function (context) {
+	if (typeof this !== "function") {
+	  throw new TypeError("Function.prototype.bind - what is trying to be bound is not callable");
+	}
+
+  var me = this;
+  var args = Array.prototype.slice.call(arguments, 1);
+
+  var fNOP = function () {};
+  fNOP.prototype = this.prototype;
+
+  var bound = function () {
+    var innerArgs = Array.prototype.slice.call(arguments);
+    var finalArgs = args.contact(innerArgs);
+    return me.apply(this instanceof fNOP ? this : context || this, finalArgs);
+  }
+
+  bound.prototype = new fNOP(); // 利用继承，继承调用函数的prototype
+  return bound;
+}
