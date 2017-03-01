@@ -21,3 +21,15 @@ Function.prototype.bind = Function.prototype.bind || function (content) {
 	}
 }
 
+// 3
+// 兼容预设传参
+Function.prototype.bind = Function.prototype.bind || function (context) {
+	var me = this;
+	var args = Array.prototype.slice.call(arguments, 1); //相当于[].slice(1)，去掉第一个参数
+
+	return function() {
+		var innerArgs = Array.prototype.slice.call(arguments);
+		var finalArgs = args.concat(innerArgs); // 将预设参数与新传入参数合并
+		return me.apply(me, finalArgs);
+	}
+}
